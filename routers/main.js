@@ -4,8 +4,13 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/user',(req,res,next)=>{
-  res.send('MAIN - User')
+router.get('/',(req,res,next)=>{
+
+  console.log(req.userInfo)
+
+  res.render('main/index',{
+    userInfo:req.userInfo
+  })
 })
 
 module.exports = router
