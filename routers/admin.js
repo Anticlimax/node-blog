@@ -4,6 +4,7 @@
 
 const express = require('express')
 const router = express.Router()
+const User = require('../models/User')
 
 router.use((req,res,next)=>{
   if(!req.userInfo.isAdmin){
@@ -21,5 +22,12 @@ router.get('/',(req,res,next)=>{
 })
 
 //用户管理
-
+router.get('/user',(req,res,next)=>{
+  User.find().then((users)=>{
+    res.render('admin/user_index',{
+      userInfo:req.userInfo,
+      users:users
+    })
+  })
+})
 module.exports = router
