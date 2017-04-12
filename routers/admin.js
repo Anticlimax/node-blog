@@ -253,7 +253,7 @@ router.get('/content', (req, res) => {
     // sort 方法取值 1：升序，-1：降序 _id这个值默认是带时间戳的 所以后添加总比
     //先添加大  我们需要降序排列
 
-    Content.find().sort({_id: -1}).limit(limit).skip(skip).then((contents) => {
+    Content.find().sort({_id: -1}).limit(limit).skip(skip).populate('category').then((contents) => {
       res.render('admin/content_index', {
         userInfo: req.userInfo,
         contents: contents,
@@ -277,6 +277,7 @@ router.get('/content/add', (req, res) => {
   })
 })
 
+//内容提交
 router.post('/content/add', (req, res) => {
 
   if (req.body.title === '') {
@@ -299,6 +300,77 @@ router.post('/content/add', (req, res) => {
       url: '/admin/content'
     })
   })
+})
+
+//内容编辑
+router.get('/content/edit', (req, res) => {
+  const id = req.query.id || ''
+  let categories = []
+
+  Category.find().sort({_id: -1}).then((rs) => {
+    categories = rs
+    return Content.findOne({
+      _id: id
+    }).populate('category')
+  }).then((content) => {
+    if (!content) {
+      res.render('admin/error', {
+        userInfo: req.userInfo,
+        message: '指定内容不存在'
+      })
+      return Promise.reject()
+    } else {
+      res.render('admin/content_edit', {
+        userInfo: req.userInfo,
+        content: content,
+        categories: categories
+      })
+    }
+  })
+})
+
+//保存修改内容
+router.post('/content/edit', (req, res) => {
+  const id = req.query.id || ''
+
+  if (req.body.title === '') {
+    res.render('admin/error', {
+      userInfo: req.userInfo,
+      message: '标题不能为空'
+    })
+    return
+  }
+
+  Content.update({
+    _id:id
+  },{
+    category: req.body.category,
+    title: req.body.title,
+    description: req.body.description,
+    content: req.body.content
+  }).then(()=>{
+    res.render('admin/success',{
+      userInfo:req.userInfo,
+      message:'内容保存成功',
+      url:'/admin/content'
+    })
+  })
+})
+
+//内容删除
+router.get('/content/delete',(req,res)=>{
+  const id = req.query.id || ''
+
+  Content.remove({
+    _id:id
+  }).then(() => {
+    res.render('admin/success', {
+      userInfo: req.userInfo,
+      message: '删除成功',
+      url: '/admin/content'
+    })
+  })
+
 })
 
 module.exports = router
