@@ -29,7 +29,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/user', (req, res, next) => {
   let page = Number(req.query.page || 1)
-  const limit = 3
+  const limit = 10
   let pages = 0
   //计算总条数
   User.count().then((count) => {
@@ -59,7 +59,7 @@ router.get('/user', (req, res, next) => {
 //分类首页
 router.get('/category', (req, res) => {
   let page = Number(req.query.page || 1)
-  const limit = 3
+  const limit = 10
   let pages = 0
   //计算总条数
   Category.count().then((count) => {
@@ -73,7 +73,10 @@ router.get('/category', (req, res) => {
 
     let skip = (page - 1) * limit
 
-    Category.find().limit(limit).skip(skip).then((categories) => {
+    // sort 方法取值 1：升序，-1：降序 _id这个值默认是带时间戳的 所以后添加总比
+    //先添加大  我们需要降序排列
+
+    Category.find().sort({_id: -1}).limit(limit).skip(skip).then((categories) => {
       res.render('admin/category_index', {
         userInfo: req.userInfo,
         categories: categories,
