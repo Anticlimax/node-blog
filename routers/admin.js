@@ -253,7 +253,7 @@ router.get('/content', (req, res) => {
     // sort 方法取值 1：升序，-1：降序 _id这个值默认是带时间戳的 所以后添加总比
     //先添加大  我们需要降序排列
 
-    Content.find().sort({_id: -1}).limit(limit).skip(skip).populate('category').then((contents) => {
+    Content.find().sort({_id: -1}).limit(limit).skip(skip).populate(['category','user']).then((contents) => {
       res.render('admin/content_index', {
         userInfo: req.userInfo,
         contents: contents,
@@ -291,6 +291,7 @@ router.post('/content/add', (req, res) => {
   new Content({
     category: req.body.category,
     title: req.body.title,
+    user: req.userInfo._id.toString(),
     description: req.body.description,
     content: req.body.content
   }).save().then((rs) => {
