@@ -23,14 +23,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">首页</a>
+            <a class="navbar-brand" href="/">首页</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                {% for category in categories %}
-                <li><a href="">{{ category.name }}</a></li>
+                {% for cate in categories %}
+                <li><a href="/?category={{ cate.id }}">{{ cate.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -106,19 +106,23 @@
 {% endfor %}
 
 <nav aria-label="...">
-    <ul class="pager">
-        {% if page <= 1 %}
-        <li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> 没有上一页了</a></li>
-        {% else %}
-        <li class="previous"><a href="/?page={{ page-1 }}"><span aria-hidden="true">&larr;</span> 上一页</a></li>
-        {% endif %}
-        <li>{{ page }}/{{ pages }}</li>
-        {% if page >= pages %}
-        <li class="next disabled"><a href="#">没有下一页了 <span aria-hidden="true">&rarr;</span></a></li>
-        {% else %}
-        <li class="next"><a href="/?page={{ page+1 }}">下一页 <span aria-hidden="true">&rarr;</span></a></li>
-        {% endif %}
-    </ul>
+    {% if pages > 0 %}
+        <ul class="pager">
+            {% if page <= 1 %}
+                <li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> 没有上一页了</a></li>
+            {% else %}
+                <li class="previous"><a href="/?category={{category}}&page={{ page-1 }}"><span aria-hidden="true">&larr;</span> 上一页</a></li>
+            {% endif %}
+            <li>{{ page }}/{{ pages }}</li>
+            {% if page >= pages %}
+                <li class="next disabled"><a href="#">没有下一页了 <span aria-hidden="true">&rarr;</span></a></li>
+            {% else %}
+                <li class="next"><a href="/?category={{category}}&page={{ page+1 }}">下一页 <span aria-hidden="true">&rarr;</span></a></li>
+            {% endif %}
+        </ul>
+    {% else %}
+        <p>当前页没有内容</p>
+    {% endif %}
 </nav>
 
 </body>

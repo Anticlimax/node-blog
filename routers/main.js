@@ -8,28 +8,33 @@ const Content = require('../models/Content')
 
 //首页
 
-router.get('/',(req,res,next)=>{
+router.get('/', (req, res, next) => {
 
-  var data = {
-    userInfo:req.userInfo,
-    categories:[],
-    count:0,
-    page:Number(req.query.page || 1),
-    limit:5,
-    pages:0
+  let data = {
+    userInfo: req.userInfo,
+    category: req.query.category || '',
+    categories: [],
+    count: 0,
+    page: Number(req.query.page || 1),
+    limit: 2,
+    pages: 0
+  }
+
+  let where = {}
+
+  if (data.category){
+    where.category = data.category
   }
 
 
-
-
   //  读取所有的分类信息
-  Category.find().then((categories)=>{
+  Category.find().then((categories) => {
 
     data.categories = categories
 
-    return Content.count()
+    return Content.where(where).count()
 
-  }).then((count)=>{
+  }).then((count) => {
 
     data.count = count
 
@@ -42,13 +47,13 @@ router.get('/',(req,res,next)=>{
 
     let skip = (data.page - 1) * data.limit
 
-    return Content.find().sort({_id: -1}).limit(data.limit).skip(skip).populate(['category','user'])
+    return Content.where(where).find().sort({_id: -1}).limit(data.limit).skip(skip).populate(['category', 'user'])
 
-  }).then((content)=>{
+  }).then((content) => {
 
     data.contents = content
     console.log(data)
-    res.render('main/index',data)
+    res.render('main/index', data)
   })
 
 
