@@ -10,12 +10,12 @@ let data = {}
 
 
 //通用数据
-router.use((req,res,next)=>{
+router.use((req, res, next) => {
 
   data.userInfo = req.userInfo
 
 
-  Category.find().then((categories)=>{
+  Category.find().then((categories) => {
 
     data.categories = categories
     next()
@@ -33,7 +33,7 @@ router.get('/', (req, res, next) => {
 
   let where = {}
 
-  if (data.category){
+  if (data.category) {
     where.category = data.category
   }
 
@@ -63,18 +63,17 @@ router.get('/', (req, res, next) => {
 
 })
 
-router.get('/views',(req,res)=>{
+router.get('/views', (req, res) => {
   let contentid = req.query.contentid || ''
-
   Content.findOne({
-    _id:contentid
-  }).then((content)=>{
+    _id: contentid
+  }).then((content) => {
     data.content = content
-
+    console.log(content)
     content.views++
     content.save()
 
-    res.render('main/view',data)
+    res.render('main/view', data)
   })
 })
 

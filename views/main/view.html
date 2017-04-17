@@ -12,4 +12,23 @@
     <p>{{ content.content }}</p>
 </div>
 
+<div class="message">
+    <p>评论 - <span>一共有0条评论</span></p>
+    {% if userInfo._id %}
+    <textarea class="messageContent" name="" id="" cols="30" rows="10"></textarea>
+    <input type="hidden" id="contentId" value="{{ content.id }}">
+    <div><a href="#" class="btn btn-default messageBtn">提交</a></div>
+    {% else %}
+    <p>你还没有登陆，请先登陆</p>
+    {% endif %}
+    <div class="messageList">
+        <ul>
+            <li>
+                <div><span></span><span></span><span></span></div>
+                <div></div>
+            </li>
+        </ul>
+    </div>
+</div>
+<script src="/public/js/comments.js"></script>
 {% endblock %}
