@@ -31,7 +31,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/user', (req, res, next) => {
   let page = Number(req.query.page || 1)
-  const limit = 10
+  const limit = 5
   let pages = 0
   //计算总条数
   User.count().then((count) => {
@@ -52,7 +52,8 @@ router.get('/user', (req, res, next) => {
         count: count,
         pages: pages,
         limit: limit,
-        page: page
+        page: page,
+        type:'user'
       })
     })
   })
@@ -61,7 +62,7 @@ router.get('/user', (req, res, next) => {
 //分类首页
 router.get('/category', (req, res) => {
   let page = Number(req.query.page || 1)
-  const limit = 10
+  const limit = 5
   let pages = 0
   //计算总条数
   Category.count().then((count) => {
@@ -85,7 +86,8 @@ router.get('/category', (req, res) => {
         count: count,
         pages: pages,
         limit: limit,
-        page: page
+        page: page,
+        type:'category'
       })
     })
   })
@@ -236,7 +238,7 @@ router.get('/category/delete', (req, res) => {
 //内容首页
 router.get('/content', (req, res) => {
   let page = Number(req.query.page || 1)
-  const limit = 10
+  const limit = 5
   let pages = 0
   //计算总条数
   Content.count().then((count) => {
@@ -260,7 +262,8 @@ router.get('/content', (req, res) => {
         count: count,
         pages: pages,
         limit: limit,
-        page: page
+        page: page,
+        type:'content'
       })
     })
   })
