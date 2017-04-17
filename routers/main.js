@@ -69,7 +69,6 @@ router.get('/views', (req, res) => {
     _id: contentid
   }).then((content) => {
     data.content = content
-    console.log(content)
     content.views++
     content.save()
 

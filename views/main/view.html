@@ -7,13 +7,13 @@
         作者: <span>{{ content.user.username }}</span> -
         时间: <span>{{ content.addTime|date('Y年m月d日 H:i:s', -8*60) }}</span> -
         阅读: <span>{{ content.views }}</span> -
-        评论: <span>10</span>
+        评论: <span>{{ content.comments.length }}</span>
     </div>
     <p>{{ content.content }}</p>
 </div>
 
 <div class="message">
-    <p>评论 - <span>一共有0条评论</span></p>
+    <p>评论 - <span>一共有 <span class="messageCount"> </span> 条评论</span></p>
     {% if userInfo._id %}
     <textarea class="messageContent" name="" id="" cols="30" rows="10"></textarea>
     <input type="hidden" id="contentId" value="{{ content.id }}">
@@ -22,12 +22,12 @@
     <p>你还没有登陆，请先登陆</p>
     {% endif %}
     <div class="messageList">
-        <ul>
-            <li>
-                <div><span></span><span></span><span></span></div>
-                <div></div>
-            </li>
-        </ul>
+
+    </div>
+    <div class="commentsBtn">
+        <span class="pre"><a href="#">上一页</a></span>
+        <span class="commentsPage"></span>
+        <span class="next"><a href="#">下一页</a></span>
     </div>
 </div>
 <script src="/public/js/comments.js"></script>
