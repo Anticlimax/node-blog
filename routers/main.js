@@ -6,19 +6,30 @@ const router = express.Router()
 const Category = require('../models/Category')
 const Content = require('../models/Content')
 
-//首页
+let data = {}
 
+
+//通用数据
+router.use((req,res,next)=>{
+
+  data.userInfo = req.userInfo
+
+
+  Category.find().then((categories)=>{
+
+    data.categories = categories
+    next()
+  })
+})
+
+//首页
 router.get('/', (req, res, next) => {
 
-  let data = {
-    userInfo: req.userInfo,
-    category: req.query.category || '',
-    categories: [],
-    count: 0,
-    page: Number(req.query.page || 1),
-    limit: 2,
-    pages: 0
-  }
+  data.category = req.query.category || ''
+  data.count = 0
+  data.page = Number(req.query.page || 1)
+  data.limit = 2
+  data.pages = 0
 
   let where = {}
 
@@ -28,13 +39,7 @@ router.get('/', (req, res, next) => {
 
 
   //  读取所有的分类信息
-  Category.find().then((categories) => {
-
-    data.categories = categories
-
-    return Content.where(where).count()
-
-  }).then((count) => {
+  Content.where(where).count().then((count) => {
 
     data.count = count
 
@@ -52,11 +57,26 @@ router.get('/', (req, res, next) => {
   }).then((content) => {
 
     data.contents = content
-    console.log(data)
     res.render('main/index', data)
   })
 
 
 })
+
+router.get('/views',(req,res)=>{
+  let contentid = req.query.contentid || ''
+
+  Content.findOne({
+    _id:contentid
+  }).then((content)=>{
+    data.content = content
+
+    content.views++
+    content.save()
+
+    res.render('main/view',data)
+  })
+})
+
 
 module.exports = router
